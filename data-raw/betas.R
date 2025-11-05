@@ -59,7 +59,18 @@ d3 %>%
   ggplot2::geom_col() +
   ggplot2::facet_grid(confidenceF~ratingF , labeller = label_wrap_gen(5))
 
+#--assign numeric values to ratings
+d4 <-
+  d3 |>
+  mutate(rating_numeric = case_when(
+    rating == "very high value" ~ 5,
+    rating == "high value" ~ 4,
+    rating == "neutral value" ~ 3,
+    rating == "low value" ~ 2,
+    rating == "very low value" ~ 1
+  )) |>
+  select(rating, rating_numeric, everything())
 
-opat_betas <- d3
+opat_betas <- d4
 
 usethis::use_data(opat_betas, overwrite = TRUE)
