@@ -2,6 +2,7 @@
 
 export("%>%")
 export(make_rose_plot)
+export(make_rose_plot_pair)
 import(ggnewscale)
 import(ggplot2)
 import(stringr)

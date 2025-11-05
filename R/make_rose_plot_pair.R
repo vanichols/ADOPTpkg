@@ -1,8 +1,9 @@
 #' Create a rose plot of the four categories for a given compound
 #'
-#' @param compound_name Name of desired compound.
+#' @param compound_name1 Name of desired compound.
+#' @param compound_name2 Name of desired compound to compare.
 #' @param data The opat_hpli dataset.
-#' @returns A rose plot
+#' @returns A paired rose plot
 #' @import ggnewscale
 #' @import ggplot2
 #' @import stringr
