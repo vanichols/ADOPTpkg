@@ -1,0 +1,21 @@
+#' Harmonized Pesticide Load values by substance
+#'
+#' A dataset containing the HPLI values by substance from Vandevoorde et al. 2025
+#'  The variables are as follows:
+#'
+#' @format A data frame with 324 rows and 15 variables:
+#' \describe{
+#'   \item{compound}{Active substances authorised in the EU that pass the 60% data coverage threshold (note, I'm not sure how that relates to the missing_share)}
+#'   \item{env_raw}{HPLI for environmental fate}
+#'   \item{eco.terr_raw}{HPLI for ecotoxicity, terrestrial component}
+#'   \item{eco.aqua_raw}{HPLI for ecotoxicity, aquatic component}
+#'   \item{hum_raw}{HPLI for human health component}
+#'   \item{env_sc}{HPLI for environmental fate multiplied by 1/3}
+#'   \item{eco.terr_sc}{HPLI for ecotoxicity, terrestrial component multiplied by 1/6}
+#'   \item{eco.aqua_sc}{HPLI for ecotoxicity, aquatic component multiplied by 1/6}
+#'   \item{hum_sc}{HPLI for human health component multiplied by 1/3}
+#'   \item{load_score}{Weighted combination of env, eco, and hum}
+#'   \item{missing_share}{The proportion of the total HPLI score attributable to imputed data (for risk assessment, we recommend discarding active substances with a missing share above 30%}
+#'   \item{cas}{The substance identification number (Chemical Abstracts Service (CAS) Registry Number)}
+#' }
+"opat_hpli"
