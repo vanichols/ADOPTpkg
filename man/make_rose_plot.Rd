@@ -4,7 +4,7 @@
 \alias{make_rose_plot}
 \title{Create a rose plot of the four categories for a given compound}
 \usage{
-make_rose_plot(compound_name, data)
+make_rose_plot(compound_name = "diquat", data = opat_hpli)
 }
 \arguments{
 \item{compound_name}{Name of desired compound.}

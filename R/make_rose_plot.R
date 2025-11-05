@@ -65,6 +65,12 @@ make_rose_plot <- function(compound_name = "diquat",
     )
   )
 
+  #--Load for title
+  plot_title_load <-
+    data |>
+    dplyr::filter(compound == compound_name) |>
+    dplyr::pull(load_score) |>
+    round(2)
 
   # Plot
   ggplot(plot_data, aes(
@@ -142,6 +148,7 @@ make_rose_plot <- function(compound_name = "diquat",
     scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
     labs(
       title = paste("Compound:", compound_name),
+      subtitle = paste("Overall load:", plot_title_load),
       x = NULL,
       y = NULL,
       fill = "Metrics",
@@ -157,7 +164,8 @@ make_rose_plot <- function(compound_name = "diquat",
       panel.grid.minor = element_blank(),
       axis.text.x = element_blank(),
       axis.text.y = element_blank(),
-      plot.title = element_text(hjust = 0.5, face = "bold")
+      plot.title = element_text(hjust = 0.5, face = "bold"),
+      plot.subtitle = element_text(hjust = 0.5)
     ) +
     # axis.ticks.y = element_line(color = "gray33")) +
     # Turn the barplot into a roseplot
