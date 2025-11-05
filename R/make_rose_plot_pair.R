@@ -8,12 +8,8 @@
 #' @import stringr
 #' @export
 
-# #--for testing
-# compound_name <- "diquat"
-# data <- opat_hpli
-# #---
-
-make_rose_plot <- function(compound_name = "diquat",
+make_rose_plot_pair <- function(compound_name1 = "diquat",
+                           compound_name2 = "glyphosate",
                            data = opat_hpli) {
 
   metric_colors2 <- c(
@@ -31,26 +27,46 @@ make_rose_plot <- function(compound_name = "diquat",
       "Human health"
     )
 
+  plot_compounds <- c(compound_name1, compound_name2)
+
   # Data to plot
   plot_data <-
     data |>
-    dplyr::filter(compound == compound_name) |>
+    dplyr::filter(compound %in% plot_compounds) |>
     dplyr::select(compound, env_raw, eco.terr_raw, eco.aqua_raw, hum_raw) |>
     tidyr::pivot_longer(env_raw:hum_raw) |>
     dplyr::mutate(
-      attribute = metric_names,
+      attribute = c(metric_names, metric_names),
       attributeF = factor(attribute, levels = metric_names),
       attribute_num = as.numeric(attributeF)
     ) |>
     #--make dummy x values
     dplyr::mutate(
-      xmin = c(0, 120, 180, 240),
-      xmid = c(60, 150, 210, 300),
-      xmax = c(120, 180, 240, 360)
+      xmin = c(0, 120, 180, 240, 0, 120, 180, 240),
+      xmid = c(60, 150, 210, 300, 60, 150, 210, 300),
+      xmax = c(120, 180, 240, 360, 120, 180, 240, 360)
     )
 
+
+
+  #--create facet titles from compounds and loads
+  data_loads <-
+    data |>
+    dplyr::filter(compound %in% plot_compounds) |>
+    dplyr::select(compound, load_score) |>
+    dplyr::mutate(load_score = round(load_score, 2))
+
+  plot_data_pair <-
+    plot_data |>
+    dplyr::left_join(data_loads) |>
+    dplyr::mutate(facet_name = paste("Compound:", compound, "\n Overall load:",
+                              load_score))
+
+
   # Dummy data for background concentric circles
-  background <- data.frame(
+  background <-
+    tidyr::crossing(
+    data.frame(
     xmin = 0,
     xmax = 360,
     ymin = c(0, 0.5, 1.0),
@@ -61,19 +77,15 @@ make_rose_plot <- function(compound_name = "diquat",
         "High to very high load"),
       levels = c("Low to moderate load",
                  "Moderate to high load",
-                 "High to very high load")
-    )
+                 "High to very high load"),
+    )),
+    plot_data_pair |>
+      dplyr::select(facet_name) |>
+      dplyr::distinct()
   )
 
-  #--Load for title
-  plot_title_load <-
-    data |>
-    dplyr::filter(compound == compound_name) |>
-    dplyr::pull(load_score) |>
-    round(2)
 
-  # Plot
-  ggplot(plot_data, aes(
+  ggplot(plot_data_pair, aes(
     x = 0,
     #attribute,
     y = value,
@@ -147,8 +159,6 @@ make_rose_plot <- function(compound_name = "diquat",
     scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
     scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
     labs(
-      title = paste("Compound:", compound_name),
-      subtitle = paste("Overall load:", plot_title_load),
       x = NULL,
       y = NULL,
       fill = "Metrics",
@@ -164,15 +174,16 @@ make_rose_plot <- function(compound_name = "diquat",
       panel.grid.minor = element_blank(),
       axis.text.x = element_blank(),
       axis.text.y = element_blank(),
+      strip.text = element_text(face = "bold", size = rel(1.1)),
       plot.title = element_text(hjust = 0.5, face = "bold"),
       plot.subtitle = element_text(hjust = 0.5)
     ) +
     # axis.ticks.y = element_line(color = "gray33")) +
     # Turn the barplot into a roseplot
     coord_polar(start = 0,
-                clip = "off")
+                clip = "off") +
+    facet_grid(.~facet_name)
 }
 
 # #--testing function
-#make_rose_plot()
-
+#make_rose_plot_pair()
