@@ -1,0 +1,18 @@
+title is the name of the approach and will appear in the title of the visuals, up to two approaches are possible;;;;;
+rating is an integer of 1, 2, 3, 4, or 5 with 5 indicating highly acceptable performance, 3 neutral, and 1 unacceptable;;;;;
+confidence is one of four values, l = low, m = medium, h = high, vh = very high;;;;;
+pesticide_load is calculated by the user and can be entered if known;;;;;
+;;;;;
+title;metric;rating_1to5;confidence;pesticide_load;notes
+Baseline - fungicides;crop value;5;vh;5.04;4.2 kg of bordeaux mixture applied per hectare, HPLI of 1.2 means a pesticide load of 5.04
+;costs;2;m;;
+;time/management complexity;3;vh;;
+;immediate usability;5;vh;;
+;environmental impact;3;l;;
+;user health and safety;3;m;;
+New approach - fairy dust;crop value;4;vh;1.05;5 kg of fairy dust applied per hectare, HPLI of 0.21,05 means a pesticide load of 1,05
+;costs;3;m;;
+;time/management complexity;2;vh;;
+;immediate usability;5;vh;;
+;environmental impact;3;l;;
+;user health and safety;3;m;;
