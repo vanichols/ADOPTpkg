@@ -13,13 +13,13 @@ make_dot_plot <- function(data = opat_example,
   baseline_color <- "gray10"
   strategy_color <- "#ffffcc"
 
-  plot_colors <- c(
-    "Really bad" =  "#d94701",
-    "Bad" = "#fdbe85",
-    "Neutral" = "gray",
-    "Good" = "#bdd7e7",
-    "Really good" = "#08519c"
-  )
+  # plot_colors <- c(
+  #   "Really bad" =  "#d94701",
+  #   "Bad" = "#fdbe85",
+  #   "Neutral" = "gray",
+  #   "Good" = "#bdd7e7",
+  #   "Really good" = "#08519c"
+  # )
 
   metric_names <-
     data |>
