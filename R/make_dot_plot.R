@@ -10,6 +10,9 @@
 make_dot_plot <- function(data = opat_example,
                              betas = opat_betas) {
 
+  baseline_color <- "gray10"
+  strategy_color <- "#ffffcc"
+
   plot_colors <- c(
     "Really bad" =  "#d94701",
     "Bad" = "#fdbe85",
@@ -18,7 +21,13 @@ make_dot_plot <- function(data = opat_example,
     "Really good" = "#08519c"
   )
 
-  metric_names6 <-
+  metric_names <-
+    data |>
+    pull(metric) |>
+    unique()
+
+
+  metric_names_nice <-
     c(
       "Crop value",
       "Costs",
@@ -28,79 +37,120 @@ make_dot_plot <- function(data = opat_example,
       "User health and safety"
     )
 
-
   #--get names of approaches
   strategy_names <-
     data |>
     dplyr::select(title) |>
     dplyr::distinct()
 
-cat_range <- 7.5
-
-  plot_data1 <-
+  data1 <-
     data |>
     rename(rating_numeric = rating_1to5) |>
-    mutate(metric = c(metric_names6, metric_names6),
-           metricF = factor(metric, levels = rev(metric_names6)),
-           weights = c(50, 12.5, 6.25, 6.25, 12.5, 12.5,
-                       50, 12.5, 6.25, 6.25, 12.5, 12.5)) |>
-    #--join with confidence bins
+    #--make metric into a factor
+    mutate(
+      metric2 = case_when(
+        metric == metric_names[1] ~ metric_names_nice[1],
+        metric == metric_names[2] ~ metric_names_nice[2],
+        metric == metric_names[3] ~ metric_names_nice[3],
+        metric == metric_names[4] ~ metric_names_nice[4],
+        metric == metric_names[5] ~ metric_names_nice[5],
+        metric == metric_names[6] ~ metric_names_nice[6])) |>
+     #--join with confidence bins
     left_join(betas,
               relationship =
-                "many-to-many") |>
-    #--calculate utility
-    group_by(title, metricF, weights) |>
-    summarise(utility = weighted.mean(value_bin, w = score),
-              utility_sd = (sd(score))^2/(5))
+                "many-to-many")
+
+
+  #--calculate utility (mean of probabilty distribution)
+  data2<-
+    data1 |>
+    group_by(title, metric2, weight) |>
+    summarise(utility = weighted.mean(value_bin, w = score))
+
+  #--calculate standard deviation of distribution
+  data3 <-
+    data1 |>
+    select(title, metric2, score, value_bin) |>
+    left_join(data2 |>
+                select(title, metric2, utility)) |>
+    mutate(term = (value_bin-utility)^2 * score/100) |>
+    group_by(title, metric2) |>
+    summarise(mysd = sum(term)^0.5)
+
+  #--check if the values make sense, they do!
+  data1 |>
+    left_join(data2) |>
+    left_join(data3) |>
+    ggplot(aes(value_bin, score)) +
+    geom_col() +
+    geom_label(aes(3, 100, label = utility)) +
+    geom_label(aes(3, 80, label = round(mysd, 2))) +
+    facet_grid(title~ metric2)
 
   #--calculate differences in mean utility
-  plot_data2 <-
-    plot_data1 |>
-    select(-utility_sd) |>
+  data4 <-
+    data2 |>
       #--calculate change from baseline to new approach
+    mutate(title = as.factor(title),
+           title = paste0("S", as.numeric(title))) |>
       pivot_wider(names_from = title,
                   values_from = utility) |>
-      rename (base = 3, new = 4) |>
-      mutate(diff_pct = (new - base)/base*100,diff_pct_abs = round(abs(diff_pct), -1),
-             diff_pct_label = ifelse(diff_pct < 0, paste0("-", diff_pct_abs, "%"),
-                                     paste0("+", diff_pct_abs, "%")))
+      rename (base = S1, new = S2) |>
+      mutate(diff_pct = (new - base)/base*100)
 
   #--calculate uncertainty in differences
-  plot_data3 <-
-    plot_data1 |>
-    select(-utility) |>
+  data5 <-
+    data3 |>
     #--calculate change from baseline to new approach
+    mutate(title = as.factor(title),
+           title = paste0("S", as.numeric(title))) |>
     pivot_wider(names_from = title,
-                values_from = utility_sd) |>
-    rename (base = 3, new = 4) |>
-    mutate(diff_sd = sqrt(base + new)) |>
-    select(metricF, diff_sd)
+                values_from = mysd) |>
+    rename (base = S1, new = S2) |>
+    mutate(diff_sd = sqrt(base*base + new*new))
+
+
+plot_data1 <-
+  data1 |>
+  select(title, metric2, score, value_bin) |>
+  left_join(data2) |>
+  left_join(data3) |>
+  left_join(data4) |>
+    #--make a label of % change and assign color
+    mutate(dabs = round(abs(diff_pct), -1),
+           dabs_lab = ifelse(diff_pct < 0,
+                             paste0("-", dabs, "%"),
+                          paste0("+", dabs, "%")),
+           dabs_lab_color = ifelse(diff_pct < 0,
+                                   "basewins",
+                                   "stratwins"))
 
   #--experimenting
   #--be cool to have size relative to certainty?
 
-   plot_data2 |>
-     left_join(plot_data3) |>
-     mutate(dummy = "hi") |>
-     ggplot(aes(x = metricF,
+   plot_data1 |>
+     mutate(dummy = 1,
+            metricF = factor(metric2, levels = metric_names_nice),
+            metric2 = fct_rev(metricF)) |>
+     ggplot(aes(x = metric2,
                 y = dummy)) +
-     # geom_point(
-     #   aes(fill = diff_pct,
-     #       size = weights),
-     #   pch = 21) +
-     geom_label(aes(y = dummy,
-                   label = diff_pct_label,
-                   size = diff_sd,
-                   fill = diff_pct),
+     geom_point(
+       aes(fill = dabs_lab_color,
+           size = mysd),
+       pch = 21) +
+     geom_text(aes(y = dummy*.5,
+                   label = dabs_lab,
+                   ),
                 show.legend = F) +
-     scale_fill_gradient2(mid = "white",
-                          #high = "#08519c",
-                          high = "#06386b",
-                          low = "#8d2e01",
-                          ) +
-     scale_size_continuous(range = c(1, 5), guide = "none") +
-     # scale_y_continuous(limits = c(-0.5, 1.5),
-     #                    expand = expansion(0.001)) +
+     scale_size_continuous(range = c(2, 11),
+                           breaks = c(2, 5, 8, 11),
+                           labels = c("Low",
+                                      "Medium",
+                                      "High",
+                                      "Very high"),
+                           guide = "legend") +
+     scale_y_continuous(limits = c(0, 1.5)) +
+     scale_fill_manual(values = c(baseline_color, strategy_color)) +
      coord_flip() +
      labs(
       x = NULL,
