@@ -49,11 +49,23 @@ make_rose_plot_pair(
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
-We can also see what the current science says about glyphosate:
+If you fill out the questionaire, you can see the performance of the
+strategy in six areas:
 
 ``` r
-make_rose_plot(compound_name = "glyphosate",
-              data = opat_hpli)
+make_ridge_plots(data = opat_example)
+#> Warning in make_ridge_plots(data = opat_example): Hi! The dataset you provided has more than one strategy.
+#> The plots will reflect the first one listed: Baseline - fungicides
+#> Joining with `by = join_by(rating_numeric, confidence)`
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+
+You can also compare the performances of the two strategies:
+
+``` r
+make_ridge_plots_pair(opat_example)
+#> Joining with `by = join_by(rating_numeric, confidence)`
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />

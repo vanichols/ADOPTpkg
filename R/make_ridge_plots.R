@@ -24,7 +24,7 @@ make_ridge_plots <- function(data = opat_example,
 
   metric_names <-
     data |>
-    pull(metric) |>
+    dplyr::pull(metric) |>
     unique()
 
   metric_names_nice <-
@@ -55,8 +55,8 @@ make_ridge_plots <- function(data = opat_example,
     dplyr::filter(title == strategy_name[1]) |>
     dplyr::rename(rating_numeric = rating_1to5) |>
     #--make metric into a factor
-    mutate(
-      metric2 = case_when(
+    dplyr::mutate(
+      metric2 = dplyr::case_when(
         metric == metric_names[1] ~ metric_names_nice[1],
         metric == metric_names[2] ~ metric_names_nice[2],
         metric == metric_names[3] ~ metric_names_nice[3],
@@ -69,7 +69,7 @@ make_ridge_plots <- function(data = opat_example,
               relationship =
                 "many-to-many") |>
     #--make some things for the figure
-    arrange(metricF) |>
+    dplyr::arrange(metricF) |>
     dplyr::mutate(metric_label = paste0(metricF, " (", round(weight, 2), "%)"),
                   metricF = as.factor(metric_label),
                   metricF = forcats::fct_inorder(metricF)) |>
