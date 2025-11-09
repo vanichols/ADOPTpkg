@@ -1,25 +1,25 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# opat
+# ADOPTpkg
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-The goal of opat is to provide access to data and functions for
+The goal of ADOPTpkg is to provide access to data and functions for
 assessing the performance and impacts of pest management strategies.
 OPAT stands for ‘online performance assessment tool’ and was developed
 as part of the European Horizon project ADOPT-IPM.
 
 ## Installation
 
-You can install the development version of opat from
+You can install the development version of ADOPTpkg from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("vanichols/opat")
+pak::pak("vanichols/ADOPTpkg")
 ```
 
 ## Example
@@ -29,7 +29,7 @@ loads, as calculated using Vandevoorde et al. (in revision). Here we
 look at a compound that has been banned in the European Union, diquat:
 
 ``` r
-library(opat)
+library(ADOPTpkg)
 make_rose_plot(compound_name = "diquat",
               data = opat_hpli)
 ```
