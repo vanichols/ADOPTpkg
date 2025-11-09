@@ -1,10 +1,7 @@
 #--take binned beta distributions from Adrian
 rm(list = ls())
 
-library(readxl)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
+# internal file - good input file ---------------------------------------------------------
 
 d1 <- readxl::read_excel("data-raw/beta-distribution-cheat-sheet-impact.xlsx",
                          skip = 5)
@@ -43,7 +40,7 @@ d2 %>%
 #--rename the ratings
 d3 <-
   d2 |>
-  mutate(rating = case_when(
+  dplyr::mutate(rating = dplyr::case_when(
     rating == "very low impact" ~ "very high value",
     rating == "low impact" ~ "high value",
     rating == "medium impact" ~ "neutral value",
@@ -57,20 +54,22 @@ d3 %>%
                 confidenceF = forcats::fct_inorder(confidence)) %>%
   ggplot2::ggplot(ggplot2::aes(value_bin, score)) +
   ggplot2::geom_col() +
-  ggplot2::facet_grid(confidenceF~ratingF , labeller = label_wrap_gen(5))
+  ggplot2::facet_grid(confidenceF~ratingF , labeller = ggplot2::label_wrap_gen(5))
 
 #--assign numeric values to ratings
 d4 <-
   d3 |>
-  mutate(rating_numeric = case_when(
+  dplyr::mutate(rating_numeric = dplyr::case_when(
     rating == "very high value" ~ 5,
     rating == "high value" ~ 4,
     rating == "neutral value" ~ 3,
     rating == "low value" ~ 2,
     rating == "very low value" ~ 1
   )) |>
-  select(rating, rating_numeric, everything())
+  dplyr::select(rating, rating_numeric, everything())
 
-opat_betas <- d4
+adopt_betas <- d4
 
-usethis::use_data(opat_betas, overwrite = TRUE)
+usethis::use_data(adopt_betas,
+                  internal = TRUE,
+                  overwrite = TRUE)
