@@ -18,4 +18,4 @@
 #'   \item{missing_share}{The proportion of the total HPLI score attributable to imputed data (for risk assessment, we recommend discarding active substances with a missing share above 30%}
 #'   \item{cas}{The substance identification number (Chemical Abstracts Service (CAS) Registry Number)}
 #' }
-"opat_hpli"
+"adopt_hpli"

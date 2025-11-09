@@ -11,4 +11,4 @@
 #'   \item{score}{An arbitrary scale from 0-100 to represent the density function of 'value'}
 #'   \item{value_bin}{A bin representing integer value ranging from 1-5, with 5 being very high value}
 #' }
-"opat_betas"
+"adopt_betas"
