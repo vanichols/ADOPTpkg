@@ -7,8 +7,8 @@
 #' @import stringr
 #' @export
 
-make_dot_plot <- function(data = opat_example,
-                             betas = opat_betas) {
+make_dot_plot <- function(data = adopt_example,
+                             betas = adopt_betas) {
 
   baseline_color <- "gray10"
   strategy_color <- "#ffffcc"

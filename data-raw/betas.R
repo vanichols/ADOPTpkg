@@ -71,5 +71,4 @@ d4 <-
 adopt_betas <- d4
 
 usethis::use_data(adopt_betas,
-                  internal = TRUE,
                   overwrite = TRUE)

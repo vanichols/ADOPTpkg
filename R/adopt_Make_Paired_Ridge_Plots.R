@@ -9,7 +9,7 @@
 #' @export
 
 
-make_ridge_plots_pair <- function(data = opat_example,
+adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
                              betas = opat_betas) {
 
   metric_colors6 <- c(

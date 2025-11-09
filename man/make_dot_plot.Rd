@@ -4,7 +4,7 @@
 \alias{make_dot_plot}
 \title{Create a dot plot summarizing change in the six metrics}
 \usage{
-make_dot_plot(data = opat_example, betas = opat_betas)
+make_dot_plot(data = adopt_example, betas = adopt_betas)
 }
 \arguments{
 \item{data}{The questionaire data template, filled in.}

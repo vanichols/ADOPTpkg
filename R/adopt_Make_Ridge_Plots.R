@@ -10,8 +10,8 @@
 #' @export
 
 
-make_ridge_plots <- function(data = opat_example,
-                             betas = opat_betas) {
+adopt_Make_Ridge_Plots <- function(data = adopt_example,
+                             betas = adopt_betas) {
 
   metric_colors <- c(
     "Crop value" =  "#c2e699",
@@ -136,5 +136,3 @@ make_ridge_plots <- function(data = opat_example,
 
    }
 
-# #--testing function
-#make_ridge_plots()

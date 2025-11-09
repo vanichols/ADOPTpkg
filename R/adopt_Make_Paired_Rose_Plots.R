@@ -2,16 +2,16 @@
 #'
 #' @param compound_name1 Name of desired compound.
 #' @param compound_name2 Name of desired compound to compare.
-#' @param data The opat_hpli dataset.
+#' @param data The adopt_hpli dataset.
 #' @returns A paired rose plot
 #' @import ggnewscale
 #' @import ggplot2
 #' @import stringr
 #' @export
 
-make_rose_plot_pair <- function(compound_name1 = "diquat",
+adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
                            compound_name2 = "glyphosate",
-                           data = opat_hpli) {
+                           data = adopt_hpli) {
 
   metric_colors2 <- c(
     "Environmental fate" =  "#31a354",

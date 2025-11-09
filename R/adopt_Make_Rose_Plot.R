@@ -1,7 +1,7 @@
 #' Create a rose plot of the four categories for a given compound
 #'
 #' @param compound_name Name of desired compound.
-#' @param data The opat_hpli dataset.
+#' @param data The adopt_hpli dataset.
 #' @returns A rose plot
 #' @import ggnewscale
 #' @import ggplot2
@@ -10,11 +10,11 @@
 
 # #--for testing
 # compound_name <- "diquat"
-# data <- opat_hpli
+# data <- adopt_hpli
 # #---
 
-make_rose_plot <- function(compound_name = "diquat",
-                           data = opat_hpli) {
+adopt_Make_Rose_Plot <- function(compound_name = "diquat",
+                           data = adopt_hpli) {
 
   metric_colors2 <- c(
     "Environmental fate" =  "#31a354",
@@ -173,6 +173,4 @@ make_rose_plot <- function(compound_name = "diquat",
                 clip = "off")
 }
 
-# #--testing function
-#make_rose_plot()
 
