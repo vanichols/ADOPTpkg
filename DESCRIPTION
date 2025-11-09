@@ -20,7 +20,9 @@ Imports:
     stringr,
     tidyr,
     ggridges,
-    patchwork
+    patchwork,
+    forcats,
+    scales
 Depends: 
     R (>= 2.10)
 LazyData: true
