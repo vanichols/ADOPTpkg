@@ -2,10 +2,6 @@
 
 rm(list = ls())
 
-library(readxl)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
 
 d1 <- readxl::read_excel("data-raw/Example questionnaire.xlsx",
                          skip = 5)
@@ -18,6 +14,6 @@ d2 <-
                 weight = as.numeric(weight)) |>
   dplyr::select(-notes)
 
-opat_example <- d2
+adopt_example <- d2
 
-usethis::use_data(opat_example, overwrite = TRUE)
+usethis::use_data(adopt_example, overwrite = TRUE)

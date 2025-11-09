@@ -11,4 +11,4 @@
 #'   \item{confidence}{User-assigned confidence in rating, l, m, h, vh}
 #'   \item{pesticide_load}{Pesticide load, calculated by user in identical units for both approaches}
 #' }
-"opat_example"
+"adopt_example"
