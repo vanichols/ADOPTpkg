@@ -1,4 +1,6 @@
 #--use supplemental material from Noe
+library(ggplot2)
+library(dplyr)
 
 d1 <- readxl::read_excel("data-raw/Supplementary material Table S2 (V2).xlsx",
                 sheet = "Pesticide Load (by substance)",
@@ -26,15 +28,52 @@ d3 <-
   dplyr::mutate(env_raw = env*3,
          eco.terr_raw = eco.terr * 6,
          eco.aqua_raw = eco.aqua * 6,
-         hum_raw = hum * 3) |>
-  dplyr::select(compound,
-         env_raw:hum_raw,
-         env_sc = env,
-         eco.terr_sc = eco.terr,
-         eco.aqua_sc = eco.aqua,
-         hum_sc = hum,
-         everything())
+         hum_raw = hum * 3)
 
-adopt_hpli <- d3
+#--simplify the compound type column, how many are there?
+d3 |>
+  dplyr::select(compound_type) |>
+  group_by(compound_type) |>
+  summarise(n = n()) |>
+  arrange(-n)
+
+d4 <-
+  d3 |>
+  mutate(compound_category = case_when(
+    (grepl("Herb", compound_type) == T) &
+      (grepl("Insect", compound_type) == F) &
+      (grepl("Fung", compound_type) == F)  ~ "Herbicide"
+    ,(grepl("Herb", compound_type) == F) &
+      (grepl("Insect", compound_type) == T) &
+      (grepl("Fung", compound_type) == F)  ~ "Insecticide"
+    ,(grepl("Herb", compound_type) == F) &
+      (grepl("Insect", compound_type) == F) &
+      (grepl("Fung", compound_type) == T)  ~ "Fungicide"
+    ,TRUE~"Other"
+  ))
+
+
+#--half herbicides, a third fungicides, the rest split between insect and other
+d4 |>
+  dplyr::select(compound_category) |>
+  group_by(compound_category) |>
+  summarise(n = n()) |>
+  arrange(-n)
+
+d5 <-
+  d4 |>
+  dplyr::select(compound,
+                env_raw:hum_raw,
+                env_sc = env,
+                eco.terr_sc = eco.terr,
+                eco.aqua_sc = eco.aqua,
+                hum_sc = hum,
+                load_score,
+                missing_share,
+                cas,
+                compound_category,
+                everything())
+
+adopt_hpli <- d5
 
 usethis::use_data(adopt_hpli, overwrite = TRUE)

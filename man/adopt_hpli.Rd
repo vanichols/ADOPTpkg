@@ -5,7 +5,7 @@
 \alias{adopt_hpli}
 \title{Harmonized Pesticide Load values by substance}
 \format{
-A data frame with 324 rows and 15 variables:
+A data frame with 324 rows and 16 variables:
 \describe{
 \item{compound}{Active substances authorised in the EU that pass the 60\% data coverage threshold (note, I'm not sure how that relates to the missing_share)}
 \item{env_raw}{HPLI for environmental fate}
@@ -19,6 +19,10 @@ A data frame with 324 rows and 15 variables:
 \item{load_score}{Weighted combination of env, eco, and hum}
 \item{missing_share}{The proportion of the total HPLI score attributable to imputed data (for risk assessment, we recommend discarding active substances with a missing share above 30\%}
 \item{cas}{The substance identification number (Chemical Abstracts Service (CAS) Registry Number)}
+\item{compound_category}{A simple classification of the pesticide type that includes only 4 levels)}
+\item{compound_type}{A detailed classification of the pesticide type that incldues 60 levels)}
+\item{compound_group}{...)}
+\item{compound_origin}{...)}
 }
 }
 \usage{
