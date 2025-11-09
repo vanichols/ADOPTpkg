@@ -1,27 +1,34 @@
-#' Create overlapping ridge plots of the six metrics, comparing each strategy
+#' Create a ridge plot of the six metrics for a given strategy
 #'
 #' @param data The questionaire data template, filled in.
 #' @param betas A dataset defining the beta distributions for confidence levels.
 #' @returns A plot
 #' @import ggplot2
 #' @import stringr
+#' @import forcats
 #' @import ggridges
+#' @import patchwork
 #' @export
 
 
 adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
-                             betas = opat_betas) {
+                                   betas = adopt_betas) {
 
-  metric_colors6 <- c(
+  metric_colors <- c(
     "Crop value" =  "#c2e699",
-    "Costs" = "#fd8d3c",
-    "Time/management complexity" = "#f768a1",
+    "Costs" = "#ffffcc",
+    "Time/management\ncomplexity" = "#fa9fb5",
     "Immediate usability" = "#fdbe85",
-    "Environmental impact" = "#7a0177",
+    "Environmental impact" = "#c51b8a",
     "User health and safety" = "#6baed6"
   )
 
-  metric_names6 <-
+  metric_names <-
+    data |>
+    dplyr::pull(metric) |>
+    unique()
+
+  metric_names_nice <-
     c(
       "Crop value",
       "Costs",
@@ -31,51 +38,98 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
       "User health and safety"
     )
 
-
   #--get names of approaches
-  strategy_names <-
+  strategy_name <-
     data |>
-    dplyr::select(title) |>
-    dplyr::distinct()
+    dplyr::pull(title) |>
+    unique()
 
 
-  plot_data <-
+  plot_data1 <-
     data |>
+    dplyr::filter(title == strategy_name[1]) |>
     dplyr::rename(rating_numeric = rating_1to5) |>
-    dplyr::mutate(metric = c(metric_names6, metric_names6),
-           metricF = factor(metric, levels = rev(metric_names6))) |>
+    #--make metric into a factor
+    dplyr::mutate(
+      metric2 = dplyr::case_when(
+        metric == metric_names[1] ~ metric_names_nice[1],
+        metric == metric_names[2] ~ metric_names_nice[2],
+        metric == metric_names[3] ~ metric_names_nice[3],
+        metric == metric_names[4] ~ metric_names_nice[4],
+        metric == metric_names[5] ~ metric_names_nice[5],
+        metric == metric_names[6] ~ metric_names_nice[6]),
+      metricF = factor(metric2, levels = (metric_names_nice))) |>
     #--join with confidence bins
     dplyr::left_join(betas,
-              relationship =
-                "many-to-many") |>
-    dplyr::select(title, metricF, value_bin, score)
+                     relationship =
+                       "many-to-many") |>
+    #--make some things for the figure
+    dplyr::arrange(metricF) |>
+    dplyr::mutate(metric_label = paste0(metricF, " (", round(weight, 2), "%)"),
+                  metricF = as.factor(metric_label),
+                  metricF = forcats::fct_inorder(metricF)) |>
+    dplyr::mutate(score = as.integer(score)) |>
+    dplyr::select(title, metricF, weight, value_bin, score)
 
-  #--ridge plot
+  plot_data2 <-
+    data |>
+    dplyr::filter(title == strategy_name[2]) |>
+    dplyr::rename(rating_numeric = rating_1to5) |>
+    #--make metric into a factor
+    dplyr::mutate(
+      metric2 = dplyr::case_when(
+        metric == metric_names[1] ~ metric_names_nice[1],
+        metric == metric_names[2] ~ metric_names_nice[2],
+        metric == metric_names[3] ~ metric_names_nice[3],
+        metric == metric_names[4] ~ metric_names_nice[4],
+        metric == metric_names[5] ~ metric_names_nice[5],
+        metric == metric_names[6] ~ metric_names_nice[6]),
+      metricF = factor(metric2, levels = (metric_names_nice))) |>
+    #--join with confidence bins
+    dplyr::left_join(betas,
+                     relationship =
+                       "many-to-many") |>
+    #--make some things for the figure
+    dplyr::arrange(metricF) |>
+    dplyr::mutate(metric_label = paste0(metricF, " (", round(weight, 2), "%)"),
+                  metricF = as.factor(metric_label),
+                  metricF = forcats::fct_inorder(metricF)) |>
+    dplyr::mutate(score = as.integer(score)) |>
+    dplyr::select(title, metricF, weight, value_bin, score)
 
-   plot_data |>
-     dplyr::mutate(score = as.integer(score)) |>
-     tidyr::uncount(score) |>
-     ggplot(aes(x = value_bin,
-                y = metricF)) +
-     ggridges::geom_density_ridges2(
-       aes(fill = title),
-       alpha = 0.6,
-       bandwidth = 0.5,
-       scale = 0.9 #--height of distributions
-       ) +
-     scale_fill_manual(values = c("gray10", "#ffffcc"),
-                       #values = c("#fdbe85", "#08519c"),
-                       guide = guide_legend(ncol = 2)) +
-     scale_x_continuous(
-       breaks = c(1, 2, 3, 4, 5),
-       labels = c("Unacceptable",
-                  "Disuaded",
-                  "Is a consideration",
-                  "Acceptable",
-                  "Highly acceptable")
-     ) +
+
+  #--ridge plots
+
+  plot1 <-
+    plot_data1 |>
+    tidyr::uncount(score) |>
+    ggplot() +
+    geom_density(
+      (aes(x = value_bin,
+           fill = metricF)),
+      bw = 0.5,
+      show.legend = F
+    ) +
+    geom_col(data = plot_data1,
+             aes(value_bin, score/100),
+             alpha = 0.5) +
+    facet_wrap(~metricF, labeller = label_wrap_gen(width = 20)) +
+    scale_fill_manual(values = unname(metric_colors)) +
+    scale_x_continuous(
+      breaks = c(1, 2, 3, 4, 5),
+      labels = c("Unacceptable",
+                 "Disuaded",
+                 "Is a consideration",
+                 "Acceptable",
+                 "Highly acceptable")
+    ) +
+    scale_y_continuous(
+      breaks = c(0, .2, .4, .6, .8, 1),
+      limits = c(0, 1),
+      labels = scales::label_percent(),
+    ) +
     labs(
-      title = "Performance",
+      title = paste(strategy_name[1]),
       y = NULL,
       fill = NULL,
       x = NULL
@@ -102,8 +156,63 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
       plot.subtitle = element_text(hjust = 0.5)
     )
 
+  plot2 <-
+    plot_data2 |>
+    tidyr::uncount(score) |>
+    ggplot() +
+    geom_density(
+      (aes(x = value_bin,
+           fill = metricF)),
+      bw = 0.5,
+      show.legend = F
+    ) +
+    geom_col(data = plot_data2,
+             aes(value_bin, score/100),
+             alpha = 0.5) +
+    facet_wrap(~metricF, labeller = label_wrap_gen(width = 20)) +
+    scale_fill_manual(values = unname(metric_colors)) +
+    scale_x_continuous(
+      breaks = c(1, 2, 3, 4, 5),
+      labels = c("Unacceptable",
+                 "Disuaded",
+                 "Is a consideration",
+                 "Acceptable",
+                 "Highly acceptable")
+    ) +
+    scale_y_continuous(
+      breaks = c(0, .2, .4, .6, .8, 1),
+      limits = c(0, 1),
+      labels = scales::label_percent(),
+    ) +
+    labs(
+      title = paste(strategy_name[2]),
+      y = NULL,
+      fill = NULL,
+      x = NULL
+    ) +
+    # Theme
+    theme_minimal() +
+    theme(
+      legend.title = element_blank(),
+      legend.position = "top",
+      legend.justification = "center",
+      legend.box = "horizontal",
+      legend.key = element_blank(),
+      legend.box.margin = margin(),
+      legend.margin = margin(),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0),
+      legend.location = "plot",
+      #--get rid of minor gridlines
+      panel.grid.minor = element_blank(),
+      #--ratings text
+      axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+      plot.title = element_text(hjust = 0.5, face = "bold"),
+      plot.subtitle = element_text(hjust = 0.5)
+    )
 
-   }
+  plot1 + plot2
 
-# #--testing function
+}
 

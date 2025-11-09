@@ -34,7 +34,7 @@ adopt_Make_Rose_Plot(compound_name = "diquat",
               data = adopt_hpli)
 ```
 
-<img src="man/figures/README-example-1.png" width="50%" />
+<img src="man/figures/README-example-1.png" width="100%" />
 
 We can compare it to the Bordeaux mixture, which is used to control
 fungal and bacterial diseases:
@@ -47,25 +47,25 @@ adopt_Make_Paired_Rose_Plots(
 #> Joining with `by = join_by(compound)`
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
 If you fill out the questionaire, you can see the performance of the
-strategy in six areas:
+strategies in six areas:
 
 ``` r
-adopt_Make_Ridge_Plots(data = adopt_example)
-#> Warning in adopt_Make_Ridge_Plots(data = adopt_example): Hi! The dataset you provided has more than one strategy.
-#> The plots will reflect the first one listed: Baseline - fungicides
+adopt_Make_Paired_Ridge_Plots(data = adopt_example)
+#> Joining with `by = join_by(rating_numeric, confidence)`
 #> Joining with `by = join_by(rating_numeric, confidence)`
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-You can also compare the performances of the two strategies:
+You can also overlap the performances of the two strategies for easy
+comparison:
 
 ``` r
-adopt_Make_Paired_Ridge_Plots(adopt_example)
+adopt_Make_Overlapping_Ridge_Plots(adopt_example)
 #> Joining with `by = join_by(rating_numeric, confidence)`
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />

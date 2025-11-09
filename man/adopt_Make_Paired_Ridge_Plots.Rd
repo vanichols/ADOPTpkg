@@ -2,9 +2,9 @@
 % Please edit documentation in R/adopt_Make_Paired_Ridge_Plots.R
 \name{adopt_Make_Paired_Ridge_Plots}
 \alias{adopt_Make_Paired_Ridge_Plots}
-\title{Create overlapping ridge plots of the six metrics, comparing each strategy}
+\title{Create a ridge plot of the six metrics for a given strategy}
 \usage{
-adopt_Make_Paired_Ridge_Plots(data = adopt_example, betas = opat_betas)
+adopt_Make_Paired_Ridge_Plots(data = adopt_example, betas = adopt_betas)
 }
 \arguments{
 \item{data}{The questionaire data template, filled in.}
@@ -15,5 +15,5 @@ adopt_Make_Paired_Ridge_Plots(data = adopt_example, betas = opat_betas)
 A plot
 }
 \description{
-Create overlapping ridge plots of the six metrics, comparing each strategy
+Create a ridge plot of the six metrics for a given strategy
 }
