@@ -19,7 +19,8 @@ Imports:
     magrittr,
     stringr,
     tidyr,
-    ggridges
+    ggridges,
+    patchwork
 Depends: 
     R (>= 2.10)
 LazyData: true
