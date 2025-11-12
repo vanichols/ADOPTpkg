@@ -6,6 +6,8 @@
 #' @import ggplot2
 #' @import stringr
 #' @import ggridges
+#' @import dplyr
+#' @import tidyr
 #' @export
 
 
@@ -55,18 +57,18 @@ adopt_Make_Overlapping_Ridge_Plots <- function(data = adopt_example,
    plot_data |>
      dplyr::mutate(score = as.integer(score)) |>
      tidyr::uncount(score) |>
-     ggplot(aes(x = value_bin,
+     ggplot2::ggplot(ggplot2::aes(x = value_bin,
                 y = metricF)) +
      ggridges::geom_density_ridges2(
-       aes(fill = title),
+       ggplot2::aes(fill = title),
        alpha = 0.6,
        bandwidth = 0.5,
        scale = 0.9 #--height of distributions
        ) +
-     scale_fill_manual(values = c("gray10", "#ffffcc"),
+     ggplot2::scale_fill_manual(values = c("gray10", "#ffffcc"),
                        #values = c("#fdbe85", "#08519c"),
                        guide = guide_legend(ncol = 2)) +
-     scale_x_continuous(
+     ggplot2::scale_x_continuous(
        breaks = c(1, 2, 3, 4, 5),
        labels = c("Unacceptable",
                   "Disuaded",
@@ -74,15 +76,15 @@ adopt_Make_Overlapping_Ridge_Plots <- function(data = adopt_example,
                   "Acceptable",
                   "Highly acceptable")
      ) +
-    labs(
+     ggplot2::labs(
       title = "Performance",
       y = NULL,
       fill = NULL,
       x = NULL
     ) +
     # Theme
-    theme_minimal() +
-    theme(
+     ggplot2::theme_minimal() +
+     ggplot2::theme(
       legend.title = element_blank(),
       legend.position = "top",
       legend.justification = "center",
