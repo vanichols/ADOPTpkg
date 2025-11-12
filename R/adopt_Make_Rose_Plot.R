@@ -3,6 +3,8 @@
 #' @param compound_name Name of desired compound.
 #' @param data The adopt_hpli dataset.
 #' @returns A rose plot
+#' @import dplyr
+#' @import tidyr
 #' @import ggnewscale
 #' @import ggplot2
 #' @import stringr
@@ -14,8 +16,7 @@
 # #---
 
 adopt_Make_Rose_Plot <- function(compound_name = "diquat",
-                           data = adopt_hpli) {
-
+                                 data = adopt_hpli) {
   metric_colors2 <- c(
     "Environmental fate" =  "#31a354",
     "Ecotoxicity (terrestrial)" = "#fd8d3c",
@@ -56,12 +57,16 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
     ymin = c(0, 0.5, 1.0),
     ymax = c(0.5, 1.0, 1.5),
     band = factor(
-      c("Low to moderate load",
+      c(
+        "Low to moderate load",
         "Moderate to high load",
-        "High to very high load"),
-      levels = c("Low to moderate load",
-                 "Moderate to high load",
-                 "High to very high load")
+        "High to very high load"
+      ),
+      levels = c(
+        "Low to moderate load",
+        "Moderate to high load",
+        "High to very high load"
+      )
     )
   )
 
@@ -73,16 +78,16 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
     round(2)
 
   # Plot
-  ggplot(plot_data, aes(
+  ggplot2::ggplot(plot_data, ggplot2::aes(
     x = 0,
     #attribute,
     y = value,
     fill = attribute
   )) +
     # Concentric circles
-    geom_rect(
+    ggplot2::geom_rect(
       data = background,
-      aes(
+      ggplot2::aes(
         xmin = xmin,
         xmax = xmax,
         ymin = ymin,
@@ -93,7 +98,7 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
       alpha = 0.5,
       inherit.aes = FALSE
     ) +
-    scale_fill_manual(
+    ggplot2::scale_fill_manual(
       name = " ",
       # breaks = c(0, 0.5, 1.0, 1.5),
       values = c(
@@ -106,9 +111,9 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
       ))
     ) +
     # Compartment divisions
-    geom_segment(
+    ggplot2::geom_segment(
       data = data.frame(x = c(0, 120, 180, 240)),
-      aes(
+      ggplot2::aes(
         x = x,
         xend = x,
         y = 0,
@@ -121,8 +126,8 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
     # # New fill layer for the metrics
     ggnewscale::new_scale_fill() +
     # Metrics (existing values under 1.5)
-    geom_rect(
-      aes(
+    ggplot2::geom_rect(
+      ggplot2::aes(
         xmin = xmin,
         xmax = xmax,
         ymin = 0,
@@ -133,20 +138,22 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
       color = "black",
       inherit.aes = FALSE
     ) +
-    geom_text(
-      aes(x = xmid,
-          y = 2,
-          label = stringr::str_wrap(attribute, 8),
-          color = attribute),
+    ggplot2::geom_text(
+      ggplot2::aes(
+        x = xmid,
+        y = 2,
+        label = stringr::str_wrap(attribute, 8),
+        color = attribute
+      ),
       show.legend = F,
       size = 3.5,
       #color = "#8B0000",
       fontface = "italic"
     ) +
     # Legend
-    scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    labs(
+    ggplot2::scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::labs(
       title = paste("Compound:", compound_name),
       subtitle = paste("Overall load:", plot_title_load),
       x = NULL,
@@ -155,8 +162,8 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
       color = "Metrics"
     ) +
     # Theme
-    theme_minimal() +
-    theme(
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
       legend.position = "bottom",
       legend.title = element_text(face = "bold"),
       panel.grid.major.x = element_blank(),
@@ -169,8 +176,5 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
     ) +
     # axis.ticks.y = element_line(color = "gray33")) +
     # Turn the barplot into a roseplot
-    coord_polar(start = 0,
-                clip = "off")
+    ggplot2::coord_polar(start = 0, clip = "off")
 }
-
-

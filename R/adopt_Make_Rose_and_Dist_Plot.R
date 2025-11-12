@@ -4,6 +4,8 @@
 #' @param data The adopt_hpli dataset.
 #' @returns A rose plot
 #' @import ggnewscale
+#' @import dplyr
+#' @import tidyr
 #' @import ggplot2
 #' @import stringr
 #' @import patchwork
@@ -93,16 +95,17 @@ adopt_Make_Rose_and_Dist_Plot <- function(
 
 
   plot1 <-
-    ggplot(plot_data1, aes(
+    ggplot2::ggplot(plot_data1,
+                    ggplot2::aes(
     x = 0,
     #attribute,
     y = value,
     fill = attribute
   )) +
     # Concentric circles
-    geom_rect(
+    ggplot2::geom_rect(
       data = background1,
-      aes(
+      ggplot2::aes(
         xmin = xmin,
         xmax = xmax,
         ymin = ymin,
@@ -113,7 +116,7 @@ adopt_Make_Rose_and_Dist_Plot <- function(
       alpha = 0.5,
       inherit.aes = FALSE
     ) +
-    scale_fill_manual(
+    ggplot2::scale_fill_manual(
       name = " ",
       # breaks = c(0, 0.5, 1.0, 1.5),
       values = c(
@@ -126,9 +129,9 @@ adopt_Make_Rose_and_Dist_Plot <- function(
       ))
     ) +
     # Compartment divisions
-    geom_segment(
+    ggplot2::geom_segment(
       data = data.frame(x = c(0, 120, 180, 240)),
-      aes(
+      ggplot2::aes(
         x = x,
         xend = x,
         y = 0,
@@ -141,7 +144,7 @@ adopt_Make_Rose_and_Dist_Plot <- function(
     # # New fill layer for the metrics
     ggnewscale::new_scale_fill() +
     # Metrics (existing values under 1.5)
-    geom_rect(
+    ggplot2::geom_rect(
       aes(
         xmin = xmin,
         xmax = xmax,
@@ -153,7 +156,7 @@ adopt_Make_Rose_and_Dist_Plot <- function(
       color = "black",
       inherit.aes = FALSE
     ) +
-    geom_text(
+    ggplot2::geom_text(
       aes(x = xmid,
           y = 2,
           label = stringr::str_wrap(attribute, 8),
@@ -164,9 +167,9 @@ adopt_Make_Rose_and_Dist_Plot <- function(
       fontface = "italic"
     ) +
     # Legend
-    scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    labs(
+    ggplot2::scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::labs(
       title = NULL,
       subtitle = NULL,
       x = NULL,
@@ -175,8 +178,8 @@ adopt_Make_Rose_and_Dist_Plot <- function(
       #color = "Metrics"
     ) +
     # Theme
-    theme_minimal() +
-    theme(
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
       legend.position = "bottom",
       legend.title = element_text(face = "bold"),
       panel.grid.major.x = element_blank(),
@@ -189,7 +192,7 @@ adopt_Make_Rose_and_Dist_Plot <- function(
     ) +
     # axis.ticks.y = element_line(color = "gray33")) +
     # Turn the barplot into a roseplot
-    coord_polar(start = 0,
+    ggplot2::coord_polar(start = 0,
                 clip = "off")
 
   # Plot 2, distribution plot
@@ -219,17 +222,17 @@ adopt_Make_Rose_and_Dist_Plot <- function(
            n = n/max(n))
 
   plot2 <-
-    ggplot() +
+    ggplot2::ggplot() +
       #--rectangles of load division
-      geom_rect(
+    ggplot2::geom_rect(
         data = background2,
-        aes(xmin = xmin,
+        ggplot2::aes(xmin = xmin,
             xmax = xmax,
             ymin = ymin,
             ymax = ymax,
             fill = band),
         show.legend = F) +
-      scale_fill_manual(
+    ggplot2::scale_fill_manual(
         name = " ",
         # breaks = c(0, 0.5, 1.0, 1.5),
         values = c(
@@ -242,33 +245,33 @@ adopt_Make_Rose_and_Dist_Plot <- function(
         ))
       ) +
     #--line of all compounds
-    geom_line(
+    ggplot2::geom_line(
       data = plot_data2 |>
         dplyr::filter(compound_category == data_compound_category),
-      aes(n, load_score),
+      ggplot2::aes(n, load_score),
       color = "black") +
     #--point representing selected compound
-    geom_point(
+    ggplot2::geom_point(
       data = plot_data2 |>
         dplyr::filter(compound == compound_name),
-      aes(n, load_score),
+      ggplot2::aes(n, load_score),
       pch = 24,
       fill = "#d94701",
       size = 5) +
     #--general fig settings
-    scale_x_continuous(
+    ggplot2::scale_x_continuous(
       breaks = c(0, 0.5, 1),
       labels = c("Lowest\ntoxicity", "Median\ntoxicity", "Highest\ntoxicity")
     ) +
-      labs(
+    ggplot2::labs(
         title = NULL,
         subtitle = NULL,
         x = NULL,
         y = "Toxicity load"
       ) +
       # Theme
-      theme_minimal() +
-      theme(
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
         legend.position = "bottom",
         legend.title = element_text(face = "bold"),
         #panel.grid.major.x = element_blank(),
@@ -285,9 +288,9 @@ adopt_Make_Rose_and_Dist_Plot <- function(
       )
 
 
-  plot1 + plot2 +
-    plot_layout(guides = "collect") &
-    plot_annotation(
+  patchwork::wrap_plots(plot1, plot2, ncol = 2) +
+    patchwork::plot_layout(guides = "collect") &
+    patchwork::plot_annotation(
       title = plot_title,
       subtitle = plot_subtitle,
       theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"),

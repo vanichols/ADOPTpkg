@@ -4,6 +4,8 @@
 #' @param compound_name2 Name of desired compound to compare.
 #' @param data The adopt_hpli dataset.
 #' @returns A paired rose plot
+#' @import dplyr
+#' @import tidyr
 #' @import ggnewscale
 #' @import ggplot2
 #' @import stringr
@@ -86,16 +88,17 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
   )
 
 
-  ggplot(plot_data_pair, aes(
+  ggplot2::ggplot(plot_data_pair,
+                  ggplot2::aes(
     x = 0,
     #attribute,
     y = value,
     fill = attribute
   )) +
     # Concentric circles
-    geom_rect(
+    ggplot2::geom_rect(
       data = background,
-      aes(
+      ggplot2::aes(
         xmin = xmin,
         xmax = xmax,
         ymin = ymin,
@@ -106,7 +109,7 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
       alpha = 0.5,
       inherit.aes = FALSE
     ) +
-    scale_fill_manual(
+    ggplot2::scale_fill_manual(
       name = " ",
       # breaks = c(0, 0.5, 1.0, 1.5),
       values = c(
@@ -119,9 +122,9 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
       ))
     ) +
     # Compartment divisions
-    geom_segment(
+    ggplot2::geom_segment(
       data = data.frame(x = c(0, 120, 180, 240)),
-      aes(
+      ggplot2::aes(
         x = x,
         xend = x,
         y = 0,
@@ -131,10 +134,10 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
       linewidth = 0.5,
       inherit.aes = FALSE
     ) +
-    # # New fill layer for the metrics
+    # # New fill layer for the metric compartment fills
     ggnewscale::new_scale_fill() +
     # Metrics (existing values under 1.5)
-    geom_rect(
+    ggplot2::geom_rect(
       aes(
         xmin = xmin,
         xmax = xmax,
@@ -146,7 +149,7 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
       color = "black",
       inherit.aes = FALSE
     ) +
-    geom_text(
+    ggplot2::geom_text(
       aes(x = xmid,
           y = 2,
           label = stringr::str_wrap(attribute, 8),
@@ -157,17 +160,17 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
       fontface = "italic"
     ) +
     # Legend
-    scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    labs(
+    ggplot2::scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::labs(
       x = NULL,
       y = NULL,
       fill = "Metrics",
       color = "Metrics"
     ) +
     # Theme
-    theme_minimal() +
-    theme(
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
       legend.position = "bottom",
       legend.title = element_text(face = "bold"),
       panel.grid.major.x = element_blank(),
@@ -181,9 +184,9 @@ adopt_Make_Paired_Rose_Plots <- function(compound_name1 = "diquat",
     ) +
     # axis.ticks.y = element_line(color = "gray33")) +
     # Turn the barplot into a roseplot
-    coord_polar(start = 0,
+    ggplot2::coord_polar(start = 0,
                 clip = "off") +
-    facet_grid(.~facet_name)
+    ggplot2::facet_grid(.~facet_name)
 }
 
 # #--testing function
