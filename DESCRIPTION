@@ -2,28 +2,30 @@ Package: ADOPTpkg
 Title: Provides Support For Assessing Performance of IPM Practices
 Version: 0.0.0.9000
 Authors@R: 
-    person("Virginia", "Nichols", , "virginia.nichols@gmail.com", 
-    role = c("aut", "cre"),
+    person("Virginia", "Nichols", , "virginia.nichols@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: The package contains data and functions that support processing both the active ingredient and practice components of pest management strategies. It was developed to assist in the European Horizon project ADOPT-IPM.
+Description: The package contains data and functions that support
+    processing both the active ingredient and practice components of pest
+    management strategies. It was developed to assist in the European
+    Horizon project ADOPT-IPM.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 URL: https://github.com/vanichols/ADOPTpkg
 BugReports: https://github.com/vanichols/ADOPTpkg/issues
-Imports: 
-    dplyr,
-    ggnewscale,
-    ggplot2,
-    magrittr,
-    stringr,
-    tidyr,
-    ggridges,
-    patchwork,
-    forcats,
-    scales,
-    janitor
 Depends: 
     R (>= 3.5)
+Imports: 
+    dplyr,
+    forcats,
+    ggnewscale,
+    ggplot2,
+    ggridges,
+    janitor,
+    magrittr,
+    patchwork,
+    scales,
+    stringr,
+    tidyr
+Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
