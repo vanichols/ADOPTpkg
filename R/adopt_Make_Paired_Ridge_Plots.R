@@ -4,7 +4,8 @@
 #' @param betas A dataset defining the beta distributions for confidence levels.
 #' @returns A plot
 #' @import ggplot2
-#' @import stringr
+#' @import dplyr
+#' @import tidyr
 #' @import forcats
 #' @import ggridges
 #' @import patchwork
@@ -103,19 +104,19 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
   plot1 <-
     plot_data1 |>
     tidyr::uncount(score) |>
-    ggplot() +
-    geom_density(
-      (aes(x = value_bin,
-           fill = metricF)),
+    ggplot2::ggplot() +
+    ggplot2::geom_density(
+      ggplot2::aes(x = value_bin,
+           fill = metricF),
       bw = 0.5,
       show.legend = F
     ) +
-    geom_col(data = plot_data1,
-             aes(value_bin, score/100),
+    ggplot2::geom_col(data = plot_data1,
+                      ggplot2::aes(value_bin, score/100),
              alpha = 0.5) +
-    facet_wrap(~metricF, labeller = label_wrap_gen(width = 20)) +
-    scale_fill_manual(values = unname(metric_colors)) +
-    scale_x_continuous(
+    ggplot2::facet_wrap(~metricF, labeller = label_wrap_gen(width = 20)) +
+    ggplot2::scale_fill_manual(values = unname(metric_colors)) +
+    ggplot2::scale_x_continuous(
       breaks = c(1, 2, 3, 4, 5),
       labels = c("Unacceptable",
                  "Disuaded",
@@ -123,20 +124,20 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
                  "Acceptable",
                  "Highly acceptable")
     ) +
-    scale_y_continuous(
+    ggplot2::scale_y_continuous(
       breaks = c(0, .2, .4, .6, .8, 1),
       limits = c(0, 1),
       labels = scales::label_percent(),
     ) +
-    labs(
+    ggplot2::labs(
       title = paste(strategy_name[1]),
       y = NULL,
       fill = NULL,
       x = NULL
     ) +
     # Theme
-    theme_minimal() +
-    theme(
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
       legend.title = element_blank(),
       legend.position = "top",
       legend.justification = "center",
@@ -159,19 +160,19 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
   plot2 <-
     plot_data2 |>
     tidyr::uncount(score) |>
-    ggplot() +
-    geom_density(
-      (aes(x = value_bin,
-           fill = metricF)),
+    ggplot2::ggplot() +
+    ggplot2::geom_density(
+      ggplot2::aes(x = value_bin,
+           fill = metricF),
       bw = 0.5,
       show.legend = F
     ) +
-    geom_col(data = plot_data2,
-             aes(value_bin, score/100),
+    ggplot2::geom_col(data = plot_data2,
+                      ggplot2::aes(value_bin, score/100),
              alpha = 0.5) +
-    facet_wrap(~metricF, labeller = label_wrap_gen(width = 20)) +
-    scale_fill_manual(values = unname(metric_colors)) +
-    scale_x_continuous(
+    ggplot2::facet_wrap(~metricF, labeller = ggplot2::label_wrap_gen(width = 20)) +
+    ggplot2::scale_fill_manual(values = unname(metric_colors)) +
+    ggplot2::scale_x_continuous(
       breaks = c(1, 2, 3, 4, 5),
       labels = c("Unacceptable",
                  "Disuaded",
@@ -179,20 +180,20 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
                  "Acceptable",
                  "Highly acceptable")
     ) +
-    scale_y_continuous(
+    ggplot2::scale_y_continuous(
       breaks = c(0, .2, .4, .6, .8, 1),
       limits = c(0, 1),
       labels = scales::label_percent(),
     ) +
-    labs(
+    ggplot2::labs(
       title = paste(strategy_name[2]),
       y = NULL,
       fill = NULL,
       x = NULL
     ) +
     # Theme
-    theme_minimal() +
-    theme(
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
       legend.title = element_blank(),
       legend.position = "top",
       legend.justification = "center",
@@ -212,7 +213,7 @@ adopt_Make_Paired_Ridge_Plots <- function(data = adopt_example,
       plot.subtitle = element_text(hjust = 0.5)
     )
 
-  plot1 + plot2
+  patchwork::wrap_plots(plot1, plot2, ncol = 2)
 
 }
 
