@@ -18,6 +18,7 @@ Imports:
     forcats,
     ggnewscale,
     ggplot2,
+    ggrepel,
     ggridges,
     janitor,
     magrittr,
