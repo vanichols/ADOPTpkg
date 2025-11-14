@@ -170,6 +170,3 @@ adopt_Make_Distribution_Plot <- function(compound_name1 = "diquat",
 
 
 }
-
-# #--testing function
-#make_rose_plot_pair()
