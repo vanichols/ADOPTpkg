@@ -99,7 +99,7 @@ adopt_Make_Distribution_Plot <- function(compound_names = c("diquat", "glyphosat
     #--substance 1
     ggplot2::geom_point(
       data = data_compounds |>
-        dplyr::filter(compound == plot_compounds[1]),
+        dplyr::filter(compound %in% plot_compounds),
       ggplot2::aes(n, load_score),
       fill = "red",
       pch = 21,
@@ -107,33 +107,33 @@ adopt_Make_Distribution_Plot <- function(compound_names = c("diquat", "glyphosat
     ) +
     ggrepel::geom_label_repel(
       data = data_compounds |>
-        dplyr::filter(compound == plot_compounds[1]),
-      ggplot2::aes(n, load_score, label = paste0(plot_compounds[1], " (", load_score, ")")),
+        dplyr::filter(compound %in% plot_compounds),
+      ggplot2::aes(n, load_score, label = paste0(compound, " (", load_score, ")")),
       size = 5,
       color = "gray70",
       point.padding = 5,
       label.padding = 0.5,
       min.segment.length = 0.1
     ) +
-    #--substance 2
-    ggplot2::geom_point(
-      data = data_compounds |>
-        dplyr::filter(compound == plot_compounds[2]),
-      ggplot2::aes(n, load_score),
-      fill = "red",
-      pch = 21,
-      size = 5
-    ) +
-    ggrepel::geom_label_repel(
-      data = data_compounds |>
-        dplyr::filter(compound == plot_compounds[2]),
-      ggplot2::aes(n, load_score, label = paste0(plot_compounds[2], " (", load_score, ")")),
-      size = 5,
-      color = "gray70",
-      point.padding = 5,
-      label.padding = 0.5,
-      min.segment.length = 0.01
-    ) +
+    # #--substance 2
+    # ggplot2::geom_point(
+    #   data = data_compounds |>
+    #     dplyr::filter(compound == plot_compounds[2]),
+    #   ggplot2::aes(n, load_score),
+    #   fill = "red",
+    #   pch = 21,
+    #   size = 5
+    # ) +
+    # ggrepel::geom_label_repel(
+    #   data = data_compounds |>
+    #     dplyr::filter(compound == plot_compounds[2]),
+    #   ggplot2::aes(n, load_score, label = paste0(plot_compounds[2], " (", load_score, ")")),
+    #   size = 5,
+    #   color = "gray70",
+    #   point.padding = 5,
+    #   label.padding = 0.5,
+    #   min.segment.length = 0.01
+    # ) +
     ggplot2::scale_x_continuous(
       breaks = c(0, 0.5, 1),
       labels = c(

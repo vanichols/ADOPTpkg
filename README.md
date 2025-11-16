@@ -40,11 +40,9 @@ We can compare it to the Bordeaux mixture, which is used to control
 fungal and bacterial diseases:
 
 ``` r
-adopt_Make_Paired_Rose_Plots(
-  compound_name1 = "diquat",
-  compound_name2 = "Bordeaux mixture",
+adopt_Make_Distribution_Plot(
+  compound_names = c("diquat", "Bordeaux mixture"),
   data = adopt_hpli)
-#> Joining with `by = join_by(compound)`
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />

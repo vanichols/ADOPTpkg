@@ -42,9 +42,8 @@ adopt_Make_Rose_Plot(compound_name = "diquat",
 We can compare it to the Bordeaux mixture, which is used to control fungal and bacterial diseases:
 
 ```{r}
-adopt_Make_Paired_Rose_Plots(
-  compound_name1 = "diquat",
-  compound_name2 = "Bordeaux mixture",
+adopt_Make_Distribution_Plot(
+  compound_names = c("diquat", "Bordeaux mixture"),
   data = adopt_hpli)
 ```
 
