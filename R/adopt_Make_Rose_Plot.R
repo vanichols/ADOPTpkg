@@ -106,9 +106,10 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
         "Moderate to high load" = "gray85",
         "High to very high load" = "gray70"
       ),
+      # give the boxes a gray70 outline of size 0.5
       guide = guide_legend(override.aes = list(
-        color = "gray70", size  = 0.5
-      ))
+        color = "gray70", size  = 0.5)
+        , ncol = 1)
     ) +
     # Compartment divisions
     ggplot2::geom_segment(
@@ -146,7 +147,7 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
         color = attribute
       ),
       show.legend = F,
-      size = 3.5,
+      size = 4.5,
       #color = "#8B0000",
       fontface = "italic"
     ) +
@@ -166,6 +167,7 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
     ggplot2::theme(
       legend.position = "bottom",
       legend.title = element_text(face = "bold"),
+      #legend.box = "vertical",
       panel.grid.major.x = element_blank(),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
