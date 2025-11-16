@@ -49,7 +49,7 @@ d4 <-
     ,(grepl("Herb", compound_type) == F) &
       (grepl("Insect", compound_type) == F) &
       (grepl("Fung", compound_type) == T)  ~ "Fungicide"
-    ,TRUE~"Other"
+    ,TRUE~"Multiple/Other"
   ))
 
 
