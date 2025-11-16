@@ -5,7 +5,7 @@
 \title{Create a rose plot for two compounds and distributions}
 \usage{
 adopt_Make_Distribution_Plot(
-  compounds = c("diquat", "glyphosate"),
+  compound_names = c("diquat", "glyphosate"),
   data = adopt_hpli
 )
 }

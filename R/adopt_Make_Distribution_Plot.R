@@ -14,7 +14,7 @@
 #' @export
 
 adopt_Make_Distribution_Plot <- function(
-    compounds = c("diquat", "glyphosate"),
+    compound_names = c("diquat", "glyphosate"),
     data = adopt_hpli) {
 
   metric_colors2 <- c(
