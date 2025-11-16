@@ -1,7 +1,6 @@
 #' Create a rose plot for two compounds and distributions
 #'
-#' @param compound_name1 Name of desired compound.
-#' @param compound_name2 Name of desired compound to compare.
+#' @param compound_names Vector of desired compounds, length one or more.
 #' @param data The adopt_hpli dataset.
 #' @returns A paired rose plot and distribution
 #' @import dplyr

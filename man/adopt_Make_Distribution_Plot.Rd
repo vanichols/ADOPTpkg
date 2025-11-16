@@ -10,11 +10,9 @@ adopt_Make_Distribution_Plot(
 )
 }
 \arguments{
+\item{compound_names}{Vector of desired compounds, length one or more.}
+
 \item{data}{The adopt_hpli dataset.}
-
-\item{compound_name1}{Name of desired compound.}
-
-\item{compound_name2}{Name of desired compound to compare.}
 }
 \value{
 A paired rose plot and distribution
