@@ -107,7 +107,7 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
         "High to very high load" = "gray70"
       ),
       # give the boxes a gray70 outline of size 0.5
-      guide = guide_legend(override.aes = list(
+      guide = ggplot2::guide_legend(override.aes = list(
         color = "gray70", size  = 0.5)
         , ncol = 1)
     ) +
@@ -152,8 +152,8 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
       fontface = "italic"
     ) +
     # Legend
-    ggplot2::scale_fill_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
-    ggplot2::scale_color_manual(values = metric_colors2, guide = guide_legend(ncol = 1)) +
+    ggplot2::scale_fill_manual(values = metric_colors2, guide = ggplot2::guide_legend(ncol = 1)) +
+    ggplot2::scale_color_manual(values = metric_colors2, guide = ggplot2::guide_legend(ncol = 1)) +
     ggplot2::labs(
       title = paste("Compound:", compound_name),
       subtitle = paste("Overall load:", plot_title_load),
@@ -166,15 +166,15 @@ adopt_Make_Rose_Plot <- function(compound_name = "diquat",
     ggplot2::theme_minimal() +
     ggplot2::theme(
       legend.position = "bottom",
-      legend.title = element_text(face = "bold"),
+      legend.title = ggplot2::element_text(face = "bold"),
       #legend.box = "vertical",
-      panel.grid.major.x = element_blank(),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      plot.title = element_text(hjust = 0.5, face = "bold"),
-      plot.subtitle = element_text(hjust = 0.5)
+      panel.grid.major.x = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"),
+      plot.subtitle = ggplot2::element_text(hjust = 0.5)
     ) +
     # axis.ticks.y = element_line(color = "gray33")) +
     # Turn the barplot into a roseplot
