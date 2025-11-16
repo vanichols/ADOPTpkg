@@ -2,7 +2,7 @@
 #'
 #' @param compound_names Vector of desired compounds, length of one or more.
 #' @param data The adopt_hpli dataset.
-#' @returns A distribution of all compounds with the selected one highlighted
+#' @returns A distribution of all compounds with the selected one(s) highlighted
 #' @import dplyr
 #' @import tidyr
 #' @import ggnewscale
@@ -35,7 +35,8 @@ adopt_Make_Distribution_Plot <- function(compound_names = c("diquat", "glyphosat
     data |>
     #dplyr::group_by(compound_category) |>
     dplyr::arrange(load_score) |>
-    dplyr::mutate(n = 1:dplyr::n(), n = n / max(n))
+    dplyr::mutate(n = 1:dplyr::n(), n = n / max(n),
+                  load_score = round(load_score, 2))
 
   #--get
   data_compounds <-
@@ -96,6 +97,25 @@ adopt_Make_Distribution_Plot <- function(compound_names = c("diquat", "glyphosat
     ggplot2::geom_line(data = plot_data,
                        ggplot2::aes(n, load_score),
                        color = "black") +
+    #--reference points
+    ggplot2::geom_point(
+      data = plot_data |>
+        dplyr::filter(load_score == max(load_score)| load_score == min(load_score)),
+      ggplot2::aes(n, load_score),
+      fill = "black",
+      pch = 22,
+      size = 3
+    ) +
+    ggrepel::geom_label_repel(
+      data = plot_data |>
+        dplyr::filter(load_score == max(load_score)| load_score == min(load_score)),
+      ggplot2::aes(n, load_score, label = paste0(compound, " (", load_score, ")")),
+      size = 5,
+      color = "gray70",
+      #point.padding = 5,
+      #label.padding = 0.5,
+      #min.segment.length = 0.01
+    ) +
     #--substance 1
     ggplot2::geom_point(
       data = data_compounds |>
@@ -110,31 +130,12 @@ adopt_Make_Distribution_Plot <- function(compound_names = c("diquat", "glyphosat
         dplyr::filter(compound %in% plot_compounds),
       ggplot2::aes(n, load_score, label = paste0(compound, " (", load_score, ")")),
       size = 5,
-      color = "gray70",
+      #color = "gray70",
       point.padding = 5,
       label.padding = 0.5,
       min.segment.length = 0.1
     ) +
-    # #--substance 2
-    # ggplot2::geom_point(
-    #   data = data_compounds |>
-    #     dplyr::filter(compound == plot_compounds[2]),
-    #   ggplot2::aes(n, load_score),
-    #   fill = "red",
-    #   pch = 21,
-    #   size = 5
-    # ) +
-    # ggrepel::geom_label_repel(
-    #   data = data_compounds |>
-    #     dplyr::filter(compound == plot_compounds[2]),
-    #   ggplot2::aes(n, load_score, label = paste0(plot_compounds[2], " (", load_score, ")")),
-    #   size = 5,
-    #   color = "gray70",
-    #   point.padding = 5,
-    #   label.padding = 0.5,
-    #   min.segment.length = 0.01
-    # ) +
-    ggplot2::scale_x_continuous(
+        ggplot2::scale_x_continuous(
       breaks = c(0, 0.5, 1),
       labels = c(
         "Lowest\ntoxicity load",
