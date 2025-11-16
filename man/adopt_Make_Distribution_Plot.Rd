@@ -2,7 +2,7 @@
 % Please edit documentation in R/adopt_Make_Distribution_Plot.R
 \name{adopt_Make_Distribution_Plot}
 \alias{adopt_Make_Distribution_Plot}
-\title{Create a rose plot for two compounds and distributions}
+\title{Create distribution plot}
 \usage{
 adopt_Make_Distribution_Plot(
   compound_names = c("diquat", "glyphosate"),
@@ -10,13 +10,13 @@ adopt_Make_Distribution_Plot(
 )
 }
 \arguments{
-\item{compound_names}{Vector of desired compounds, length one or more.}
+\item{compound_names}{Vector of desired compounds, length of one or more.}
 
 \item{data}{The adopt_hpli dataset.}
 }
 \value{
-A paired rose plot and distribution
+A distribution of all compounds with the selected one highlighted
 }
 \description{
-Create a rose plot for two compounds and distributions
+Create distribution plot
 }
