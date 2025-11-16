@@ -31,7 +31,7 @@ adopt_Make_Distribution_Plot <- function(
       "Human health"
     )
 
-  plot_compounds <- compounds
+  plot_compounds <- compound_names
 
   #--distribution of data for all compounds
   plot_data <-
