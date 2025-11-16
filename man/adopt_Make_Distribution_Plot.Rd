@@ -5,17 +5,16 @@
 \title{Create a rose plot for two compounds and distributions}
 \usage{
 adopt_Make_Distribution_Plot(
-  compound_name1 = "diquat",
-  compound_name2 = "glyphosate",
+  compounds = c("diquat", "glyphosate"),
   data = adopt_hpli
 )
 }
 \arguments{
+\item{data}{The adopt_hpli dataset.}
+
 \item{compound_name1}{Name of desired compound.}
 
 \item{compound_name2}{Name of desired compound to compare.}
-
-\item{data}{The adopt_hpli dataset.}
 }
 \value{
 A paired rose plot and distribution

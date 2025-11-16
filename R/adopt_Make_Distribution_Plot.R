@@ -13,9 +13,9 @@
 #' @import patchwork
 #' @export
 
-adopt_Make_Distribution_Plot <- function(compound_name1 = "diquat",
-                           compound_name2 = "glyphosate",
-                           data = adopt_hpli) {
+adopt_Make_Distribution_Plot <- function(
+    compounds = c("diquat", "glyphosate"),
+    data = adopt_hpli) {
 
   metric_colors2 <- c(
     "Environmental fate" =  "#31a354",
@@ -32,46 +32,26 @@ adopt_Make_Distribution_Plot <- function(compound_name1 = "diquat",
       "Human health"
     )
 
-  plot_compounds <- c(compound_name1, compound_name2)
-
-  # Data to plot
-  plot_data <-
-    data |>
-    dplyr::filter(compound %in% plot_compounds) |>
-    dplyr::select(compound, env_raw, eco.terr_raw, eco.aqua_raw, hum_raw) |>
-    tidyr::pivot_longer(env_raw:hum_raw) |>
-    dplyr::mutate(
-      attribute = c(metric_names, metric_names),
-      attributeF = factor(attribute, levels = metric_names),
-      attribute_num = as.numeric(attributeF)
-    ) |>
-    #--make dummy x values
-    dplyr::mutate(
-      xmin = c(0, 120, 180, 240, 0, 120, 180, 240),
-      xmid = c(60, 150, 210, 300, 60, 150, 210, 300),
-      xmax = c(120, 180, 240, 360, 120, 180, 240, 360)
-    )
-
-
+  plot_compounds <- compounds
 
   #--distribution of data for all compounds
-  plot_data2 <-
+  plot_data <-
     data |>
     #dplyr::group_by(compound_category) |>
     dplyr::arrange(load_score) |>
     dplyr::mutate(n = 1:dplyr::n(),
                   n = n/max(n))
 
-  #--create facet titles from compounds and loads
-  data_loads <-
-    plot_data2 |>
+  #--get
+  data_compounds <-
+    plot_data |>
     dplyr::filter(compound %in% plot_compounds) |>
     dplyr::select(compound, n, load_score) |>
     dplyr::mutate(load_score = round(load_score, 2))
 
 
     #--rectangle for load levels
-  background2 <- data.frame(
+  background <- data.frame(
     xmin = 0,
     xmax = 1,
     ymin = c(0, 0.5, 1.0),
@@ -89,7 +69,7 @@ adopt_Make_Distribution_Plot <- function(compound_name1 = "diquat",
     ggplot2::ggplot() +
     #--rectangles of load division
     ggplot2::geom_rect(
-      data = background2,
+      data = background,
       ggplot2::aes(xmin = xmin,
                    xmax = xmax,
                    ymin = ymin,
@@ -110,35 +90,35 @@ adopt_Make_Distribution_Plot <- function(compound_name1 = "diquat",
     ) +
     #--line of all compounds
     ggplot2::geom_line(
-      data = plot_data2,
+      data = plot_data,
       ggplot2::aes(n, load_score),
       color = "black") +
     #--substance 1
       ggplot2::geom_point(
-        data = data_loads |>
-          dplyr::filter(compound == compound_name1),
+        data = data_compounds |>
+          dplyr::filter(compound == plot_compounds[1]),
         ggplot2::aes(n, load_score),
         fill = "red",
         pch = 21,
         size = 5) +
       ggrepel::geom_label_repel(
-      data = data_loads |>
-        dplyr::filter(compound == compound_name1),
-      ggplot2::aes(n, load_score, label = paste(compound, load_score),
-      size = 5)) +
+      data = data_compounds |>
+        dplyr::filter(compound == plot_compounds[1]),
+      ggplot2::aes(n, load_score, label = paste(plot_compounds[1], load_score)),
+      size = 5) +
       #--substance 2
       ggplot2::geom_point(
-        data = data_loads |>
-          dplyr::filter(compound == compound_name2),
+        data = data_compounds |>
+          dplyr::filter(compound == plot_compounds[2]),
         ggplot2::aes(n, load_score),
         fill = "red",
         pch = 21,
         size = 5) +
       ggrepel::geom_label_repel(
-        data = data_loads |>
-          dplyr::filter(compound == compound_name2),
-        ggplot2::aes(n, load_score, label = paste(compound, load_score),
-                     size = 5)) +#--general fig settings
+        data = data_compounds |>
+          dplyr::filter(compound == plot_compounds[2]),
+        ggplot2::aes(n, load_score, label = paste(plot_compounds[2], load_score)),
+                     size = 5) +
     ggplot2::scale_x_continuous(
       breaks = c(0, 0.5, 1),
       labels = c("Lowest\ntoxicity", "Median\ntoxicity", "Highest\ntoxicity")
