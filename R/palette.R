@@ -27,3 +27,15 @@ metric_colors <- c(
     "Humans (reprotoxicity)"               = "#7a0177"
 )
 
+
+# value colors ------------------------------------------------------------
+
+
+value_colors <- c(
+  "Very low value (1)" = "#270B55",
+  "Low value (2)" = "#65156E",
+  "Neutral value (3)" = "#9F2963",
+  "High value (4)" = "#D44842",
+  "Very high value (5)" = "#F9C126"
+)
+

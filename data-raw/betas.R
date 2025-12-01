@@ -1,5 +1,12 @@
 #--take binned beta distributions from Adrian
+library(readr)
+library(ggplot2)
+library(scales)
+
 rm(list = ls())
+
+source("R/palette.R")
+
 
 # internal file - good input file ---------------------------------------------------------
 
@@ -10,11 +17,11 @@ d1 <- readxl::read_excel("data-raw/beta-distribution-cheat-sheet-impact.xlsx",
 #--the values listed are for impact, not value
 #--create a mirror image
 d2 <-
-  d1 %>%
-  dplyr::select(-tot) %>%
-  tidyr::fill(confidence) %>%
-  janitor::clean_names() %>%
-  tidyr::pivot_longer(x1:x5) %>%
+  d1 |>
+  dplyr::select(-tot) |>
+  tidyr::fill(confidence) |>
+  janitor::clean_names() |>
+  tidyr::pivot_longer(x1:x5) |>
   dplyr::mutate(name = readr::parse_number(name),
                 value_bin = dplyr::case_when(
                   name == 1 ~ 5,
@@ -23,19 +30,19 @@ d2 <-
                   name == 4 ~ 2,
                   name == 5 ~ 1,
                   TRUE ~ 9999
-                )) %>%
-  dplyr::rename(score = value) %>%
-  dplyr::select(-name) %>%
+                )) |>
+  dplyr::rename(score = value) |>
+  dplyr::select(-name) |>
   dplyr::mutate_if(is.character, stringr::str_to_lower)
 
 
 #--check it
-d2 %>%
+d2 |>
   dplyr::mutate(ratingF = forcats::fct_inorder(rating),
-                confidenceF = forcats::fct_inorder(confidence)) %>%
-  ggplot2::ggplot(ggplot2::aes(value_bin, score)) +
-  ggplot2::geom_col() +
-  ggplot2::facet_grid(ratingF ~confidenceF)
+                confidenceF = forcats::fct_inorder(confidence)) |>
+  ggplot(aes(value_bin, score)) +
+  geom_col() +
+  facet_grid(ratingF ~confidenceF)
 
 #--rename the ratings
 d3 <-
@@ -49,12 +56,46 @@ d3 <-
   ))
 
 #--check it
-d3 %>%
+d3 |>
   dplyr::mutate(ratingF = forcats::fct_inorder(rating),
-                confidenceF = forcats::fct_inorder(confidence)) %>%
-  ggplot2::ggplot(ggplot2::aes(value_bin, score)) +
-  ggplot2::geom_col() +
-  ggplot2::facet_grid(confidenceF~ratingF , labeller = ggplot2::label_wrap_gen(5))
+                confidenceF = forcats::fct_inorder(confidence)) |>
+  ggplot(aes(value_bin, score)) +
+  geom_col() +
+  facet_grid(confidenceF~ratingF , labeller = label_wrap_gen(5))
+
+#--make a nice one for supplemental figures
+d3 |>
+  dplyr::mutate(score = score/100) |>
+  #--fix rating labels
+  dplyr::mutate(
+    rating = stringr::str_to_sentence(rating),
+    ratingF = forcats::fct_inorder(rating),
+    ratingF2 = forcats::fct_rev(ratingF),
+    rating_numeric = as.numeric(ratingF2),
+    rating = paste0(rating, " (", rating_numeric, ")"),
+    ratingF = forcats::fct_inorder(rating),
+    ratingF = forcats::fct_rev(ratingF)) |>
+  #--fix confidence labels
+  dplyr::mutate(
+    confidence = dplyr::case_when(
+      confidence == "l" ~ "Low confidence",
+      confidence == "m" ~ "Medium confidence",
+      confidence == "h" ~ "High confidence",
+      confidence == "vh" ~ "Very high confidence",
+      TRUE ~ "XX"),
+    confidenceF = forcats::fct_inorder(confidence)) |>
+  ggplot(aes(value_bin, score)) +
+  geom_col(aes(fill = ratingF), show.legend = F, color = "black") +
+  scale_y_continuous(labels = label_percent(),
+                     limits = c(0, 1)) +
+  scale_fill_discrete(palette = value_colors) +
+  facet_grid(confidenceF~ratingF , labeller = label_wrap_gen(10)) +
+  labs(x = "Value",
+       y = "Weight") +
+  theme_bw()
+
+ggsave("data-raw/fig_beta-distributions.png",
+       width = 6, height = 5)
 
 #--assign numeric values to ratings
 d4 <-
