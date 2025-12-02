@@ -6,10 +6,14 @@
 #' @import stringr
 #' @export
 
-calc_overall_utility <- function(data = opat_example,
-                             betas = opat_betas,
-                             nsim = 100) {
+#--for testing
+data <- adopt_example
+betas <- adopt_betas
+nsim <- 10000
 
+calc_overall_utility <- function(data = adopt_example,
+                             betas = adopt_betas,
+                             nsim = 10000) {
 
   #-- vector of strategies
   v.strat <-
@@ -136,30 +140,33 @@ calc_overall_utility <- function(data = opat_example,
 
   datares <-
     dplyr::bind_rows(datares_1, datares_2) |>
-    select(title, metric, value_bin, score)
-
+    dplyr::select(title, metric, value_bin, score)
 
 
   #--calculate utility
   data_util<-
     datares |>
-    group_by(title, metric) |>
-    summarise(utility = weighted.mean(value_bin, w = score))
+    dplyr::group_by(title, metric) |>
+    dplyr::summarise(utility = weighted.mean(value_bin, w = score))
 
   #--calculate standard deviation of distribution
   data_sd <-
     datares |>
-    select(title, metric, score, value_bin) |>
-    left_join(data_util |>
-                select(title, metric, utility)) |>
-    mutate(term = (value_bin-utility)^2 * score/100) |>
-    group_by(title, metric) |>
-    summarise(mysd = sum(term)^0.5)
+    dplyr::select(title, metric, score, value_bin) |>
+    dplyr::left_join(data_util |>
+                       dplyr::select(title, metric, utility)) |>
+    dplyr::mutate(term = (value_bin-utility)^2 * score/100) |>
+    dplyr::group_by(title, metric) |>
+    dplyr::summarise(mysd = sum(term)^0.5)
+
+  #--what is the maximum sd possible? I think it is 20
+  #--if they were split
+  sqrt((3 - 5)^2*50 + (3 - 1)^2*50)
 
   #--check if the values make sense, they do I guess
   datares |>
-    left_join(data_util) |>
-    left_join(data_sd) |>
+    dplyr::left_join(data_util) |>
+    dplyr::left_join(data_sd) |>
     ggplot(aes(value_bin, score)) +
     geom_col() +
     geom_label(aes(3, 100, label = utility)) +
