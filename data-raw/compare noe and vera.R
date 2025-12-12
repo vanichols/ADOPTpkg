@@ -1,6 +1,7 @@
 library(dplyr)
 library(ggplot2)
 library(readxl)
+library(ADOPTpkg)
 
 vera <-
   read_excel("data-raw/Copy of final_PL_all_24.11.xlsx") |>
@@ -20,8 +21,8 @@ dat |>
   ggplot(aes(load_score_vera, load_score_noe)) +
   geom_point() +
   geom_abline() +
+  geom_smooth(method = "lm", se = F) +
   scale_x_continuous(limits = c(0, 1.25)) +
-
   scale_y_continuous(limits = c(0, 1.25))
 
 
